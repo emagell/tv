@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV</title>
+    <title>Livestreams</title>
     <style>
         body {
             margin: 0;
@@ -14,30 +14,30 @@
             text-align: center;
         }
 
-        .navbar {
+        .navbar, .navbar-second {
             background-color: #222;
-            padding: 10px 0;
+            padding: 5px 0;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
 
-        .navbar a {
+        .navbar a, .navbar-second a {
             color: white;
             text-decoration: none;
-            padding: 10px 15px;
-            margin: 5px;
-            font-size: 16px;
+            padding: 5px 10px;
+            margin: 3px;
+            font-size: 14px;
             transition: 0.3s;
             border: 1px solid white;
-            border-radius: 5px;
+            border-radius: 4px;
         }
 
-        .navbar a:hover {
+        .navbar a:hover, .navbar-second a:hover {
             background-color: #444;
         }
 
-        .navbar a.active {
+        .navbar a.active, .navbar-second a.active {
             background-color: #666;
         }
 
@@ -45,7 +45,7 @@
             width: 90%;
             max-width: 1200px;
             height: 80vh;
-            margin: 20px auto;
+            margin: 15px auto;
             position: relative;
         }
 
@@ -54,75 +54,72 @@
             height: 100%;
             border: none;
         }
-    </style>
 
-    <!-- Google Cast SDK -->
-    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?load=receiver"></script>
-
-    <script>
-        // Chromecast initialization
-        let castSession = null;
-        let player = null;
-
-        function initializeCast() {
-            cast.framework.CastContext.getInstance().setOptions({
-                receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-                autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
-            });
-
-            cast.framework.CastContext.getInstance().addEventListener(cast.framework.CastContextEventType.SESSION_STARTED, (event) => {
-                castSession = event.session;
-            });
+        .fullscreen-button, .chromecast-button {
+            margin-top: 10px;
+            padding: 4px 8px;
+            font-size: 10px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
+        .fullscreen-button:hover, .chromecast-button:hover {
+            background-color: #666;
+        }
+    </style>
+    <script>
         function changeStream(videoUrl, element) {
             document.getElementById("livestream").src = videoUrl;
 
-            // Remove 'active' class from all links
-            let links = document.querySelectorAll('.navbar a');
+            let links = document.querySelectorAll('.navbar a, .navbar-second a');
             links.forEach(link => link.classList.remove('active'));
 
-            // Add 'active' class to clicked link
             element.classList.add('active');
         }
 
-        // Function to cast the stream to Chromecast
-        function castStream(videoUrl) {
-            if (castSession) {
-                const mediaInfo = new chrome.cast.media.MediaInfo(videoUrl, 'application/x-mpegURL');
-                const request = new chrome.cast.media.LoadRequest(mediaInfo);
-
-                castSession.loadMedia(request, (mediaStatus) => {
-                    console.log('Stream loaded on Chromecast:', mediaStatus);
-                }, (error) => {
-                    console.error('Error loading media:', error);
-                });
-            } else {
-                alert("No Chromecast device connected");
-            }
-        }
-
-        // Toggle Fullscreen
         function toggleFullscreen() {
-            const iframe = document.getElementById("livestream");
+            let iframe = document.getElementById("livestream");
             if (iframe.requestFullscreen) {
                 iframe.requestFullscreen();
-            } else if (iframe.mozRequestFullScreen) { // Firefox
+            } else if (iframe.mozRequestFullScreen) {
                 iframe.mozRequestFullScreen();
-            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari
+            } else if (iframe.webkitRequestFullscreen) {
                 iframe.webkitRequestFullscreen();
-            } else if (iframe.msRequestFullscreen) { // IE/Edge
+            } else if (iframe.msRequestFullscreen) {
                 iframe.msRequestFullscreen();
             }
         }
 
-        window.onload = function() {
-            initializeCast();
-        };
+        function castStream() {
+            if (!window.chrome || !chrome.cast || !chrome.cast.isAvailable) {
+                alert("Chromecast er ikke tilgængelig");
+                return;
+            }
+            
+            let sessionRequest = new chrome.cast.SessionRequest(chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID);
+            let apiConfig = new chrome.cast.ApiConfig(sessionRequest, function() {}, function(error) {
+                console.log("Chromecast fejl:", error);
+            });
+            
+            chrome.cast.initialize(apiConfig, function() {
+                chrome.cast.requestSession(function(session) {
+                    let mediaInfo = new chrome.cast.media.MediaInfo(document.getElementById("livestream").src, "video/mp4");
+                    let request = new chrome.cast.media.LoadRequest(mediaInfo);
+                    session.loadMedia(request);
+                });
+            });
+        }
     </script>
+    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
 </head>
 <body>
-
     <div class="navbar">
         <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-801.php', this)" class="active">DR1</a>
         <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-802.php', this)">DR2</a>
@@ -131,26 +128,22 @@
         <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-810.php', this)">TV2 Sport</a>
         <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-808.php', this)">TV2 Sport X</a>
         <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-819.php', this)">TV3+</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-223.php', this)">TV3 Max</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-809.php', this)">TV3 Sport</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-803.php', this)">Kanal 4</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-804.php', this)">Kanal 5</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-800.php', this)">6'eren</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-805.php', this)">Kanal 9</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-806.php', this)">MTV</a>
+    </div>
+
+    <div class="navbar-second">
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-811.php', this)">C More Stars</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-812.php', this)">C More First</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-813.php', this)">C More Hits</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-814.php', this)">V Series</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-815.php', this)">V Film Premiere</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-816.php', this)">V Film Family</a>
     </div>
 
     <div class="video-container">
         <iframe id="livestream" src="https://thedaddy.to/embed/stream-801.php" allowfullscreen allow="autoplay; fullscreen" scrolling="no"></iframe>
     </div>
-
-    <!-- Chromecast and Fullscreen Controls -->
-    <div>
-        <button onclick="toggleFullscreen()">Fullscreen</button>
-	<div style="height: 0; border-top: 10px solid transparent;"></div>
-	<button onclick="castStream('https://dokko1new.koskoros.ru/dokko1/premium801/mono.m3u8')">Cast to Chromecast</button>
-        
-    </div>
-
+    
+    <button class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
+    <button class="chromecast-button" onclick="castStream()">Chromecast</button>
 </body>
 </html>
