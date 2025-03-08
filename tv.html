@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livestreams with Fullscreen and Chromecast</title>
+    <title>TV</title>
     <style>
         body {
             margin: 0;
@@ -146,7 +146,8 @@
 
     <!-- Chromecast and Fullscreen Controls -->
     <div>
-        <button onclick="toggleFullscreen()">Fullscreen</button><hr>
+        <button onclick="toggleFullscreen()">Fullscreen</button>
+	<div style="height: 0; border-top: 10px solid transparent;"></div>
 	<button onclick="castStream('https://dokko1new.koskoros.ru/dokko1/premium801/mono.m3u8')">Cast to Chromecast</button>
         
     </div>
