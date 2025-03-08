@@ -71,6 +71,50 @@
             border: none !important; /* Completely remove border */
             border-radius: 0; /* Ensure no rounded corners */
         }
+
+        /* Dropdown styling */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown ul {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #1e1e1e;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            width: 180px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        }
+
+        .dropdown:hover ul {
+            display: block;
+        }
+
+        .dropdown li {
+            padding: 10px;
+        }
+
+        .dropdown li a {
+            text-decoration: none;
+            color: #f5f5f5;
+            font-weight: normal;
+            display: block;
+        }
+
+        .dropdown li a:hover {
+            background-color: #00b894; /* Green highlight */
+            color: #fff;
+        }
+
+        /* Active dropdown item style */
+        .dropdown.active a {
+            background-color: #00b894; /* Green highlight for active dropdown */
+        }
     </style>
 </head>
 <body>
@@ -83,13 +127,25 @@
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-808.php', this)">TV2 Sport X</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-819.php', this)">TV3+</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-223.php', this)">TV3 Max</a></li>
-	    <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-811.php', this)">TV3 See</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-811.php', this)">TV3 See</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-809.php', this)">TV3 Sport</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-803.php', this)">Kanal 4</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-804.php', this)">Kanal 5</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-800.php', this)">6'eren</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-805.php', this)">Kanal 9</a></li>
         <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-806.php', this)">MTV</a></li>
+
+        <!-- Dropdown for "Andet" -->
+        <li class="dropdown" id="dropdownAndet">
+            <a href="#">Andet(USA)</a>
+            <ul>
+                <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-340.php', this)">Animal Planet</a></li>
+		<li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-310.php', this)">Comedy Central</a></li>
+                <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-322.php', this)">History Channel</a></li>
+                <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-313.php', this)">Discovery Channel</a></li>      
+                
+            </ul>
+        </li>
     </ul>
 
     <div class="stream-container">
@@ -106,6 +162,15 @@
 
             // Add active class to the clicked link
             element.classList.add('active');
+
+            // Remove active class from the "Andet" dropdown before reactivating it
+            const dropdown = document.getElementById('dropdownAndet');
+            dropdown.classList.remove('active'); // Reset dropdown state
+
+            // Check if the clicked link is inside the "Andet" dropdown and activate it
+            if (element.closest('.dropdown')) {
+                dropdown.classList.add('active');  // Activate the dropdown link
+            }
 
             // Change the iframe source to the selected stream URL
             document.getElementById('streamViewer').src = url;
