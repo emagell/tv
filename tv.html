@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV</title>
+    <title>Livestreams with Fullscreen and Chromecast</title>
     <style>
         body {
             margin: 0;
@@ -38,7 +38,7 @@
         }
 
         .navbar a.active {
-            background-color: #666; /* Fremhæv aktivt link */
+            background-color: #666;
         }
 
         .video-container {
@@ -55,31 +55,70 @@
             border: none;
         }
     </style>
+
+    <!-- Google Cast SDK -->
+    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?load=receiver"></script>
+
     <script>
+        // Chromecast initialization
+        let castSession = null;
+        let player = null;
+
+        function initializeCast() {
+            cast.framework.CastContext.getInstance().setOptions({
+                receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+                autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+            });
+
+            cast.framework.CastContext.getInstance().addEventListener(cast.framework.CastContextEventType.SESSION_STARTED, (event) => {
+                castSession = event.session;
+            });
+        }
+
         function changeStream(videoUrl, element) {
             document.getElementById("livestream").src = videoUrl;
 
-            // Fjern 'active' klasse fra alle links
+            // Remove 'active' class from all links
             let links = document.querySelectorAll('.navbar a');
             links.forEach(link => link.classList.remove('active'));
 
-            // Tilføj 'active' klasse til det klikkede link
+            // Add 'active' class to clicked link
             element.classList.add('active');
         }
 
-        // Funktion til at aktivere fullscreen
+        // Function to cast the stream to Chromecast
+        function castStream(videoUrl) {
+            if (castSession) {
+                const mediaInfo = new chrome.cast.media.MediaInfo(videoUrl, 'application/x-mpegURL');
+                const request = new chrome.cast.media.LoadRequest(mediaInfo);
+
+                castSession.loadMedia(request, (mediaStatus) => {
+                    console.log('Stream loaded on Chromecast:', mediaStatus);
+                }, (error) => {
+                    console.error('Error loading media:', error);
+                });
+            } else {
+                alert("No Chromecast device connected");
+            }
+        }
+
+        // Toggle Fullscreen
         function toggleFullscreen() {
-            var iframe = document.getElementById("livestream");
+            const iframe = document.getElementById("livestream");
             if (iframe.requestFullscreen) {
                 iframe.requestFullscreen();
             } else if (iframe.mozRequestFullScreen) { // Firefox
                 iframe.mozRequestFullScreen();
-            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari og Opera
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari
                 iframe.webkitRequestFullscreen();
             } else if (iframe.msRequestFullscreen) { // IE/Edge
                 iframe.msRequestFullscreen();
             }
         }
+
+        window.onload = function() {
+            initializeCast();
+        };
     </script>
 </head>
 <body>
@@ -105,8 +144,12 @@
         <iframe id="livestream" src="https://thedaddy.to/embed/stream-801.php" allowfullscreen allow="autoplay; fullscreen" scrolling="no"></iframe>
     </div>
 
-    <!-- Knappen til at aktivere fullscreen -->
-    <button onclick="toggleFullscreen()">Fullscreen</button>
+    <!-- Chromecast and Fullscreen Controls -->
+    <div>
+        <button onclick="toggleFullscreen()">Fullscreen</button><hr>
+	<button onclick="castStream('https://dokko1new.koskoros.ru/dokko1/premium801/mono.m3u8')">Cast to Chromecast</button>
+        
+    </div>
 
 </body>
 </html>
