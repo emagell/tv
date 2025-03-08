@@ -112,8 +112,13 @@
         }
 
         /* Active dropdown item style */
-        .dropdown.active a {
-            background-color: #00b894; /* Green highlight for active dropdown */
+        .dropdown li a.active {
+            background-color: #00b894; /* Green highlight for active dropdown item */
+        }
+
+        /* Active dropdown button style */
+        .dropdown a.active {
+            background-color: #00b894; /* Green highlight for the dropdown button */
         }
     </style>
 </head>
@@ -137,13 +142,12 @@
 
         <!-- Dropdown for "Andet" -->
         <li class="dropdown" id="dropdownAndet">
-            <a href="#">Andet(USA)</a>
+            <a href="#">Andet..</a>
             <ul>
                 <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-340.php', this)">Animal Planet</a></li>
-		<li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-310.php', this)">Comedy Central</a></li>
+                <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-310.php', this)">Comedy Central</a></li>
                 <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-322.php', this)">History Channel</a></li>
-                <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-313.php', this)">Discovery Channel</a></li>      
-                
+                <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-313.php', this)">Discovery Channel</a></li>
             </ul>
         </li>
     </ul>
@@ -160,16 +164,24 @@
                 link.classList.remove('active');
             });
 
+            // Remove active class from the "Andet" dropdown button
+            const dropdownButton = document.querySelector('.dropdown a');
+            if (dropdownButton) {
+                dropdownButton.classList.remove('active');
+            }
+
             // Add active class to the clicked link
             element.classList.add('active');
 
-            // Remove active class from the "Andet" dropdown before reactivating it
-            const dropdown = document.getElementById('dropdownAndet');
-            dropdown.classList.remove('active'); // Reset dropdown state
-
-            // Check if the clicked link is inside the "Andet" dropdown and activate it
+            // If the selected link is inside the "Andet" dropdown, also mark the dropdown button as active
             if (element.closest('.dropdown')) {
-                dropdown.classList.add('active');  // Activate the dropdown link
+                const dropdown = element.closest('.dropdown');
+                dropdown.querySelector('a').classList.add('active');  // Activate the dropdown button
+                const dropdownLinks = dropdown.querySelectorAll('a');
+                dropdownLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+                element.classList.add('active'); // Activate the clicked link in the dropdown
             }
 
             // Change the iframe source to the selected stream URL
