@@ -1,147 +1,114 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Stream Channels</title>
     <style>
-        body {
+        /* Reset default styles */
+        body, h1, p {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: black;
-            color: white;
-            text-align: center;
         }
 
-        .navbar, .navbar-second {
-            background-color: #222;
-            padding: 5px 0;
+        body {
+            background-color: #121212; /* Very dark background */
+            color: #f5f5f5; /* Light text color */
+            text-align: center;
+            padding: 50px 0;
+        }
+
+        /* Stream link styling */
+        .stream-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 10px;
         }
 
-        .navbar a, .navbar-second a {
-            color: white;
+        .stream-links li {
+            display: inline-block;
+        }
+
+        .stream-links a {
             text-decoration: none;
-            padding: 5px 10px;
-            margin: 3px;
+            background-color: #1e1e1e; /* Dark background for links */
+            color: #f5f5f5; /* Light text color for links */
+            padding: 10px 20px;
+            border-radius: 5px;
             font-size: 14px;
-            transition: 0.3s;
-            border: 1px solid white;
-            border-radius: 4px;
+            font-weight: bold; /* Make text bold */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2); /* Light gray glow around buttons */
         }
 
-        .navbar a:hover, .navbar-second a:hover {
-            background-color: #444;
+        .stream-links a:hover, 
+        .stream-links a.active {
+            background-color: #00b894; /* Green highlight */
+            transform: scale(1.1);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* Brighter glow on hover/active */
         }
 
-        .navbar a.active, .navbar-second a.active {
-            background-color: #666;
-        }
-
-        .video-container {
-            width: 90%;
-            max-width: 1200px;
-            height: 80vh;
-            margin: 15px auto;
-            position: relative;
+        .stream-container {
+            margin-top: 20px;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0; /* Removed padding to avoid extra spacing */
+            background-color: transparent; /* Removed background */
+            box-shadow: none; /* Removed shadow */
+            border-radius: 0; /* Removed border radius */
         }
 
         iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .fullscreen-button, .chromecast-button {
-            margin-top: 10px;
-            padding: 8px 16px;
-            font-size: 14px;
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .fullscreen-button:hover, .chromecast-button:hover {
-            background-color: #666;
+            width: 90%;
+            height: 750px; /* Increased height for a larger player */
+            border: none !important; /* Completely remove border */
+            border-radius: 0; /* Ensure no rounded corners */
         }
     </style>
-    <script>
-        function changeStream(videoUrl, element) {
-            document.getElementById("livestream").src = videoUrl;
-
-            let links = document.querySelectorAll('.navbar a, .navbar-second a');
-            links.forEach(link => link.classList.remove('active'));
-
-            element.classList.add('active');
-        }
-
-        function toggleFullscreen() {
-            let iframe = document.getElementById("livestream");
-            if (iframe.requestFullscreen) {
-                iframe.requestFullscreen();
-            } else if (iframe.mozRequestFullScreen) {
-                iframe.mozRequestFullScreen();
-            } else if (iframe.webkitRequestFullscreen) {
-                iframe.webkitRequestFullscreen();
-            } else if (iframe.msRequestFullscreen) {
-                iframe.msRequestFullscreen();
-            }
-        }
-
-        function castStream() {
-            if (!window.chrome || !chrome.cast || !chrome.cast.isAvailable) {
-                alert("Chromecast er ikke tilgængelig");
-                return;
-            }
-            
-            let sessionRequest = new chrome.cast.SessionRequest(chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID);
-            let apiConfig = new chrome.cast.ApiConfig(sessionRequest, function() {}, function(error) {
-                console.log("Chromecast fejl:", error);
-            });
-            
-            chrome.cast.initialize(apiConfig, function() {
-                chrome.cast.requestSession(function(session) {
-                    let mediaInfo = new chrome.cast.media.MediaInfo(document.getElementById("livestream").src, "video/mp4");
-                    let request = new chrome.cast.media.LoadRequest(mediaInfo);
-                    session.loadMedia(request);
-                });
-            });
-        }
-    </script>
-    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
 </head>
 <body>
-    <div class="navbar">
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-801.php', this)" class="active">DR1</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-802.php', this)">DR2</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-817.php', this)">TV2</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-818.php', this)">TV2 Echo</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-810.php', this)">TV2 Sport</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-808.php', this)">TV2 Sport X</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-819.php', this)">TV3+</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-223.php', this)">TV3 Max</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-809.php', this)">TV3 Sport</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-803.php', this)">Kanal 4</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-804.php', this)">Kanal 5</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-800.php', this)">6'eren</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-805.php', this)">Kanal 9</a>
-        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-806.php', this)">MTV</a>
+    <ul class="stream-links">
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-801.php', this)" class="active">DR1</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-802.php', this)">DR2</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-817.php', this)">TV2</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-818.php', this)">TV2 Echo</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-810.php', this)">TV2 Sport</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-808.php', this)">TV2 Sport X</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-819.php', this)">TV3+</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-223.php', this)">TV3 Max</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-809.php', this)">TV3 Sport</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-803.php', this)">Kanal 4</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-804.php', this)">Kanal 5</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-800.php', this)">6'eren</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-805.php', this)">Kanal 9</a></li>
+        <li><a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-806.php', this)">MTV</a></li>
+    </ul>
+
+    <div class="stream-container">
+        <iframe id="streamViewer" src="https://thedaddy.to/embed/stream-801.php" allowfullscreen></iframe>
     </div>
 
-    <div class="video-container">
-        <iframe id="livestream" src="https://thedaddy.to/embed/stream-801.php" allowfullscreen allow="autoplay; fullscreen" scrolling="no"></iframe>
-    </div>
-    
-    <button class="fullscreen-button" onclick="toggleFullscreen()">Fullscreen</button>
-    <button class="chromecast-button" onclick="castStream()">Chromecast</button>
+    <script>
+        function changeStream(url, element) {
+            // Remove active class from all links
+            const links = document.querySelectorAll('.stream-links a');
+            links.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Add active class to the clicked link
+            element.classList.add('active');
+
+            // Change the iframe source to the selected stream URL
+            document.getElementById('streamViewer').src = url;
+        }
+    </script>
 </body>
 </html>
