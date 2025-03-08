@@ -1,2 +1,3 @@
-                                                                                                                  123
-                                                                                            ![image](https://github.com/user-attachments/assets/3ef44a25-cecd-4fa6-871c-1ee53f00f2ba)
+1. https://htmlpreview.github.io/
+2. kopir https://github.com/emagell/tv/blob/main/tv.html
+3. sæt ind på https://htmlpreview.hithub.io/
