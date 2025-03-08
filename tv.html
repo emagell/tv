@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livestreams</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            text-align: center;
+        }
+
+        .navbar {
+            background-color: #222;
+            padding: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+            border: 1px solid white;
+            border-radius: 5px;
+        }
+
+        .navbar a:hover {
+            background-color: #444;
+        }
+
+        .navbar a.active {
+            background-color: #666; /* Fremhæv aktivt link */
+        }
+
+        .video-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+    <script>
+        function changeStream(videoUrl, element) {
+            document.getElementById("livestream").src = videoUrl;
+
+            // Fjern 'active' klasse fra alle links
+            let links = document.querySelectorAll('.navbar a');
+            links.forEach(link => link.classList.remove('active'));
+
+            // Tilføj 'active' klasse til det klikkede link
+            element.classList.add('active');
+        }
+    </script>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-801.php', this)" class="active">DR1</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-802.php', this)">DR2</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-817.php', this)">TV2</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-818.php', this)">TV2 Echo</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-810.php', this)">TV2 Sport</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-808.php', this)">TV2 Sport X</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-819.php', this)">TV3+</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-223.php', this)">TV3 Max</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-809.php', this)">TV3 Sport</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-803.php', this)">Kanal 4</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-804.php', this)">Kanal 5</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-800.php', this)">6'eren</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-805.php', this)">Kanal 9</a>
+        <a href="#" onclick="changeStream('https://thedaddy.to/embed/stream-806.php', this)">MTV</a>
+    </div>
+
+    <div class="video-container">
+        <iframe id="livestream" src="https://thedaddy.to/embed/stream-801.php" allowfullscreen allow="autoplay; fullscreen" scrolling="no"></iframe>
+    </div>
+
+</body>
+</html>
