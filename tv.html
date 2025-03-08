@@ -66,6 +66,20 @@
             // Tilføj 'active' klasse til det klikkede link
             element.classList.add('active');
         }
+
+        // Funktion til at aktivere fullscreen
+        function toggleFullscreen() {
+            var iframe = document.getElementById("livestream");
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari og Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+        }
     </script>
 </head>
 <body>
@@ -90,6 +104,9 @@
     <div class="video-container">
         <iframe id="livestream" src="https://thedaddy.to/embed/stream-801.php" allowfullscreen allow="autoplay; fullscreen" scrolling="no"></iframe>
     </div>
+
+    <!-- Knappen til at aktivere fullscreen -->
+    <button onclick="toggleFullscreen()">Fullscreen</button>
 
 </body>
 </html>
